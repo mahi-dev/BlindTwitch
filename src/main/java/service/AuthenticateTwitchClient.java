@@ -10,10 +10,8 @@ import event.MessageEvent;
 import lombok.Getter;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
-public class AuthenticateTwitchClient {
+public class AuthenticateTwitchClient implements ServiceClient.TwitchService{
 
     private final BlindConfiguration blindConfiguration;
     private final TwitchClientBuilder clientBuilder;
@@ -30,6 +28,7 @@ public class AuthenticateTwitchClient {
         this.joinChannels();
     }
 
+    @Override
     public TwitchClient createTtwitchClient(@NonNull String clientId,
                                             @NonNull String clientSecret,
                                             @NonNull String provider,
@@ -47,6 +46,7 @@ public class AuthenticateTwitchClient {
                 .build();
     }
 
+    @Override
     public TwitchClient createTtwitchClient(BlindConfiguration blindConfiguration) {
         return  createTtwitchClient(blindConfiguration.clientId(),
                     blindConfiguration.clientSecret(),

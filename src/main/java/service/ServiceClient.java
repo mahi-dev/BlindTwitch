@@ -1,8 +1,12 @@
 package service;
 
+import com.github.twitch4j.TwitchClient;
+import configuration.BlindConfiguration;
 import lombok.NonNull;
+import model.GameModel;
 import model.GameResponseModel;
 
+import java.io.IOException;
 import java.io.Serial;
 import java.net.URL;
 import java.util.List;
@@ -10,25 +14,36 @@ import java.util.List;
 public class ServiceClient {
 
     public static class Exception extends java.lang.Exception {
-
         @Serial
         private static final long serialVersionUID = 8732690520984084906L;
-
         public Exception(String message, Throwable cause) {
             super(message, cause);
         }
-
         public Exception(String message) {
             super(message);
         }
-
         public Exception(Throwable cause) {
             super(cause);
         }
     }
 
-    public interface Service {
+    public interface TwitchService {
+        TwitchClient createTtwitchClient(@NonNull String clientId,
+                                         @NonNull String clientSecret,
+                                         @NonNull String provider,
+                                         @NonNull String clientToken);
 
+        TwitchClient createTtwitchClient(BlindConfiguration blindConfiguration);
+    }
+
+    public interface GameService {
+        List<GameModel> getAllGames() throws Exception;
+        List<GameModel> getGame(@NonNull String id) throws Exception;
+        void storeGame(@NonNull GameModel response) throws Exception;
+        void deleteGame(@NonNull String id) throws Exception;
+    }
+
+    public interface ResponseService {
         List<GameResponseModel> getGameResponse(@NonNull String id) throws Exception;
         void storeGameResponse(@NonNull GameResponseModel response) throws Exception;
         void addAcceptedResponse(@NonNull GameResponseModel gameResponse, @NonNull String ...responses) throws Exception;
@@ -36,6 +51,12 @@ public class ServiceClient {
             this.addAcceptedResponse(gameResponse, responses.toArray(new String[0]));
         }
         void deleteGameResponse(@NonNull String id) throws Exception, NumberFormatException;
-        void storeGameResponse(@NonNull URL filePath) throws Exception;
+    }
+
+    public interface ImportExportService {
+        void storeGameResponse(@NonNull String name, @NonNull URL filePath) throws Exception;
+        void serveGameResponse(@NonNull String id, @NonNull URL filePath) throws Exception, IOException;
+        void serveGameResponse(@NonNull GameModel game, @NonNull URL filePath) throws Exception, IOException;
+        void serveAllGames(@NonNull URL filePath) throws Exception, IOException;
     }
 }
