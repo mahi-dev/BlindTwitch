@@ -1,14 +1,11 @@
 package model;
 
-
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Lob;
-import java.sql.Blob;
 
 @Entity
 @Data
@@ -16,15 +13,11 @@ import java.sql.Blob;
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper=false)
 @DynamicUpdate
-public class Guessable implements Model<Long> {
+public class Match implements Model<Long> {
     @Id
     @GeneratedValue
     @EqualsAndHashCode.Include
     private Long uid;
     @NonNull
     private final String name;
-    @Lob
-    @NonNull
-    private final Blob guess;
-
 }

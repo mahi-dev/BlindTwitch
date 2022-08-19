@@ -7,8 +7,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Lob;
-import java.sql.Blob;
 
 @Entity
 @Data
@@ -16,15 +14,14 @@ import java.sql.Blob;
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper=false)
 @DynamicUpdate
-public class Guessable implements Model<Long> {
+public class ChannelUser implements Model<Long> {
     @Id
     @GeneratedValue
     @EqualsAndHashCode.Include
     private Long uid;
-    @NonNull
-    private final String name;
-    @Lob
-    @NonNull
-    private final Blob guess;
 
+    @NonNull
+    private final String userId;
+    @NonNull
+    private final String userName;
 }

@@ -1,6 +1,8 @@
 import com.github.twitch4j.TwitchClientBuilder;
+import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
 import configuration.BlindConfiguration;
 import lombok.Getter;
+import message.MessageManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -8,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.context.PropertyPlaceholderAutoConfiguration;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -46,7 +49,8 @@ import java.nio.file.Path;
 @EnableJpaRepositories({"repository"})
 @EnableTransactionManagement
 @ConfigurationPropertiesScan({"configuration"})
-@ComponentScan({"controller","model"})
+@ComponentScan({"controller"})
+@EntityScan({"model"})
 public class BlindApplication {
 
     @Configuration
@@ -85,6 +89,12 @@ public class BlindApplication {
         return new ResponseService(repository);
     }
 
+    @Lazy
+    @Bean
+    public TwitchIdentityProvider twitchIdentityProvider(BlindConfiguration config){
+        return new TwitchIdentityProvider(config.clientId(), config.clientSecret(), config.redirectUrl());
+    }
+
     @Bean
     @Lazy
     public TwitchClientBuilder  clientBuilder(){
@@ -93,9 +103,20 @@ public class BlindApplication {
 
     @Bean
     @Lazy
-    public ServiceClient.TwitchService authenticateTwitchClient(BlindConfiguration blindConfiguration, TwitchClientBuilder clientBuilder){
-        return new AuthenticateTwitchClient( blindConfiguration, clientBuilder);
+    public ServiceClient.TwitchService authenticateTwitchClient(BlindConfiguration config,
+                                                                TwitchIdentityProvider twitchIdentityProvider,
+                                                                TwitchClientBuilder clientBuilder){
+        return new AuthenticateTwitchClient(config, twitchIdentityProvider, clientBuilder);
     }
+
+    @Lazy
+    @Bean
+    public MessageManager messageManager(ServiceClient.GameService gameService,
+                                         ServiceClient.ResponseService responseService,
+                                         ServiceClient.UserService userService) {
+        return new MessageManager(gameService, responseService, userService);
+    }
+
 
     public static void main(final String[] args) {
         SpringApplication.run(BlindApplication.class, args);

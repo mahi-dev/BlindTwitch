@@ -3,26 +3,23 @@ package service;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import model.EmptyGuessable;
-import model.GameModel;
-import model.GameResponseModel;
-import model.Guessable;
+import model.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.GuessableRenderer;
 import utils.csv.CsvReader;
 import utils.csv.CsvWriter;
 import utils.storage.DiskMultiPartFile;
 import utils.storage.FileSystemStorage;
 
+import javax.sql.rowset.serial.SerialBlob;
 import javax.transaction.Transactional;
 import java.io.*;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -47,10 +44,9 @@ public class ImportExportService implements ServiceClient.ImportExportService {
                             .filter(row -> row.size() >= 7)
                             .map(row -> new GameResponseModel(
                                             Integer.parseInt(row.get(1)),
-                                            createGuessable(Guessable.Type.valueOf(row.get(0)),
-                                                    name, row.get(2)),
+                                            createGuessable(name, row.get(2)),
                                             row.get(3),
-                                            Set.of(row.get(4).split(DELIMITER)),
+                                            Arrays.stream(row.get(4).split(DELIMITER)).map(Match::new).collect(Collectors.toSet()),
                                             Boolean.parseBoolean(row.get(5)),
                                             Boolean.parseBoolean(row.get(6))
                                     )
@@ -72,10 +68,10 @@ public class ImportExportService implements ServiceClient.ImportExportService {
         try {
             var exportableResponse = game.getResponses().stream()
                     .map(r-> List.of(
-                            String.valueOf(r.getOrder()),
+                            String.valueOf(r.getPosition()),
                             getPath(r.getProposition()),
                             r.getResponse(),
-                            String.join(DELIMITER, r.getAcceptedMatch()),
+                            r.getAcceptedMatch().stream().map(Match::getName).collect(Collectors.joining(DELIMITER)),
                             Boolean.valueOf(r.isExactMatch()).toString(),
                             Boolean.valueOf(r.isActive()).toString()
                     )).collect(Collectors.toList());
@@ -96,9 +92,9 @@ public class ImportExportService implements ServiceClient.ImportExportService {
         }
     }
 
-    private Guessable createGuessable(@NotNull Guessable.Type type, @NotNull String name,@NotNull String path)  {
+    private Guessable createGuessable( @NotNull String name,@NotNull String path)  {
         try {
-            return new GuessableRenderer().visit(type, name, getInputStream(path));
+            return new Guessable(name, new SerialBlob(getInputStream(path).readAllBytes()));
         } catch (IOException | SQLException e) {
             LOG.error("Error during reading file {0}",e);
             return new EmptyGuessable();

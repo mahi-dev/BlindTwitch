@@ -1,5 +1,6 @@
 package service;
 
+import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.twitch4j.TwitchClient;
 import configuration.BlindConfiguration;
 import lombok.NonNull;
@@ -12,6 +13,12 @@ import java.net.URL;
 import java.util.List;
 
 public class ServiceClient {
+
+    public interface UserService {
+
+        boolean isUnknowUser(@NonNull String userId);
+        void createUser(@NonNull String userId,@NonNull String username);
+    }
 
     public static class Exception extends java.lang.Exception {
         @Serial
@@ -31,9 +38,14 @@ public class ServiceClient {
         TwitchClient createTtwitchClient(@NonNull String clientId,
                                          @NonNull String clientSecret,
                                          @NonNull String provider,
-                                         @NonNull String clientToken);
+                                         @NonNull String clientToken) throws Exception;
 
         TwitchClient createTtwitchClient(BlindConfiguration blindConfiguration);
+
+        boolean isCredentialValid(@NonNull String provider, @NonNull String clientToken);
+        boolean isCredentialValid(BlindConfiguration blindConfiguration);
+
+        OAuth2Credential getAdditionalCredentialInformation(@NonNull String provider, @NonNull String clientToken) throws Exception;
     }
 
     public interface GameService {

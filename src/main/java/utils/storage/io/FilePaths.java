@@ -1,11 +1,11 @@
 package utils.storage.io;
 
-import fr.agysoft.boot.Streams;
-import fr.agysoft.boot.Strings;
-import fr.agysoft.boot.functional.Rethrowable;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import utils.Rethrowable;
+import utils.Streams;
+import utils.Strings;
 
 import java.io.IOException;
 import java.nio.file.*;

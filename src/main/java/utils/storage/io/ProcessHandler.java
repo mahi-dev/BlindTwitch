@@ -1,6 +1,5 @@
 package utils.storage.io;
 
-import fr.agysoft.boot.concurrency.ManualResetEvent;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;

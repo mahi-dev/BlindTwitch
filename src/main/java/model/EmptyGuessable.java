@@ -1,11 +1,11 @@
 package model;
 
 
+import lombok.SneakyThrows;
+
 import javax.sql.rowset.serial.SerialBlob;
-import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
-import java.sql.SQLException;
 
 public class EmptyGuessable extends Guessable {
     @Override
@@ -14,7 +14,8 @@ public class EmptyGuessable extends Guessable {
     }
 
     @Override
-    public Blob getGuess() throws IOException, SQLException {
+    @SneakyThrows
+    public Blob getGuess() {
         return new SerialBlob(InputStream.nullInputStream().readAllBytes());
     }
 }

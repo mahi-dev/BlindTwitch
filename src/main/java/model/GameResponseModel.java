@@ -1,9 +1,10 @@
 package model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.util.Set;
 
@@ -12,6 +13,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
+@DynamicUpdate
 public class GameResponseModel implements Model<Long> {
 
     @Serial
@@ -21,8 +23,7 @@ public class GameResponseModel implements Model<Long> {
     @GeneratedValue
     @EqualsAndHashCode.Include
     private Long uid;
-    @NonNull
-    private final int order;
+    private final int position;
     @OneToOne(fetch = FetchType.LAZY)
     @NonNull
     private final Guessable proposition;
@@ -30,10 +31,9 @@ public class GameResponseModel implements Model<Long> {
     @NotBlank
     private final String response;
     @NonNull
-    private final Set<String> acceptedMatch;
-    @NonNull
+    @OneToMany(fetch = FetchType.LAZY)
+    private final Set<Match> acceptedMatch;
     private final boolean exactMatch;
-    @NonNull
     private final boolean active;
 
 }

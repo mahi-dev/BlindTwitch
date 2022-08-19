@@ -15,8 +15,7 @@ public class MessageEvent {
 
         public void onChannelMessage(ChannelMessageEvent event) {
             LOG.info(
-                    "Channel [%s] - User[%s] - Message [%s]%n",
-                    event.getChannel().getName(),
+                    "User {} - Message {}",
                     event.getUser().getName(),
                     event.getMessage()
             );

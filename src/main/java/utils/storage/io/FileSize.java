@@ -1,10 +1,9 @@
 package utils.storage.io;
 
-import fr.agysoft.boot.Strings;
-import fr.agysoft.boot.functional.Pair;
-import fr.agysoft.boot.text.InvalidFormatException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import org.springframework.data.util.Pair;
+import utils.Strings;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -12,12 +11,12 @@ import java.util.List;
 @AllArgsConstructor
 public class FileSize {
 
-	private static final List<Pair<Long, fr.agysoft.boot.io.FileSizeUnit>> UNITS = List.of(
-			new Pair<>(1_000_000_000_000L, fr.agysoft.boot.io.FileSizeUnit.TB),
-			new Pair<>(1_000_000_000L, fr.agysoft.boot.io.FileSizeUnit.GB),
-			new Pair<>(1_000_000L, fr.agysoft.boot.io.FileSizeUnit.MB),
-			new Pair<>(1_000L, fr.agysoft.boot.io.FileSizeUnit.KB),
-			new Pair<>(1L, fr.agysoft.boot.io.FileSizeUnit.B));
+	private static final List<Pair<Long, FileSizeUnit>> UNITS = List.of(
+			Pair.of(1_000_000_000_000L, FileSizeUnit.TB),
+			Pair.of(1_000_000_000L, FileSizeUnit.GB),
+			Pair.of(1_000_000L, FileSizeUnit.MB),
+			Pair.of(1_000L, FileSizeUnit.KB),
+			Pair.of(1L, FileSizeUnit.B));
 
 	private static final DecimalFormat FORMATTER = new DecimalFormat("0.##");
 
@@ -30,11 +29,11 @@ public class FileSize {
 
 	private boolean parseValue(String value) {
 		for (final var pair : UNITS) {
-			final var unit = pair.getSecondValue();
+			final var unit = pair.getSecond();
 			final var unitName = unit.name();
 			if (Strings.endsWithIgnoreCase(value, unitName)) {
 				this.value = Long.parseUnsignedLong(value.substring(0, value.length() - unitName.length()).trim())
-						* pair.getFirstValue();
+						* pair.getFirst();
 				return true;
 			}
 		}
@@ -53,9 +52,9 @@ public class FileSize {
 	@Override
 	public String toString() {
 		for (final var pair : UNITS) {
-			final double result = (double) this.value / pair.getFirstValue();
+			final double result = (double) this.value / pair.getFirst();
 			if (result >= 1D)
-				return FORMATTER.format(result) + pair.getSecondValue().translation();
+				return FORMATTER.format(result) + pair.getSecond();
 		}
 		return Long.toString(this.value);
 	}

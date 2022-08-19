@@ -1,10 +1,11 @@
 package model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.context.annotation.Lazy;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.util.Set;
 
@@ -12,6 +13,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
+@DynamicUpdate
 public class GameModel implements Model<Long> {
 
     @Serial
