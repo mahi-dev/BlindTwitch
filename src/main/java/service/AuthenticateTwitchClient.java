@@ -21,15 +21,18 @@ public class AuthenticateTwitchClient implements ServiceClient.TwitchService{
 
     @Getter
     private final TwitchClient twitchClient;
+    private final ServiceClient.UserService userService;
 
     @Autowired
     public AuthenticateTwitchClient(BlindConfiguration blindConfiguration,
                                     TwitchIdentityProvider twitchIdentityProvider,
-                                    TwitchClientBuilder clientBuilder) {
+                                    TwitchClientBuilder clientBuilder,
+                                    ServiceClient.UserService userService) {
         this.blindConfiguration = blindConfiguration;
         this.twitchIdentityProvider = twitchIdentityProvider;
         this.clientBuilder = clientBuilder;
         this.twitchClient = createTtwitchClient(blindConfiguration);
+        this.userService = userService;
         this.registerEvents();
         this.joinChannels();
     }
@@ -80,7 +83,7 @@ public class AuthenticateTwitchClient implements ServiceClient.TwitchService{
     }
 
     private void registerEvents() {
-        new MessageEvent(twitchClient.getEventManager().getEventHandler(SimpleEventHandler.class));
+        new MessageEvent(twitchClient.getEventManager().getEventHandler(SimpleEventHandler.class), userService);
     }
 
     private void joinChannels() {

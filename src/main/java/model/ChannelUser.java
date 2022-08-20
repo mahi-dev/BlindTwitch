@@ -24,4 +24,5 @@ public class ChannelUser implements Model<Long> {
     private final String userId;
     @NonNull
     private final String userName;
+    private final boolean adminRole;
 }

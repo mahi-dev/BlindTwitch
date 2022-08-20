@@ -2,7 +2,7 @@ package service;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import model.GameResponseModel;
+import model.GameResponse;
 import model.Match;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -22,7 +22,7 @@ public class ResponseService implements ServiceClient.ResponseService {
     private final GameResponseRepository repository;
 
     @Override
-    public List<GameResponseModel> getGameResponse(@NonNull String id) throws ServiceClient.Exception {
+    public List<GameResponse> getGameResponse(@NonNull String id) throws ServiceClient.Exception {
         return (repository.findById(Long.parseLong(id)).isPresent())?
                 List.of(repository.findById(Long.parseLong(id)).get()):
                 Collections.emptyList();
@@ -30,16 +30,16 @@ public class ResponseService implements ServiceClient.ResponseService {
 
     @Override
     @Transactional
-    public void storeGameResponse(@NonNull GameResponseModel response) throws ServiceClient.Exception {
+    public void storeGameResponse(@NonNull GameResponse response) throws ServiceClient.Exception {
         repository.saveAndFlush(response);
     }
 
     @Override
     @Transactional
-    public void addAcceptedResponse(@NonNull GameResponseModel gameResponse, @NotNull String... responses)
+    public void addAcceptedResponse(@NonNull GameResponse gameResponse, @NotNull String... responses)
             throws ServiceClient.Exception {
         repository.saveAndFlush(
-                new GameResponseModel(
+                new GameResponse(
                     gameResponse.getPosition(),
                     gameResponse.getProposition(),
                     gameResponse.getResponse(),

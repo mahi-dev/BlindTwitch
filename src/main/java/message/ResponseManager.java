@@ -1,7 +1,7 @@
 package message;
 
 import lombok.NonNull;
-import model.GameResponseModel;
+import model.GameResponse;
 import model.Match;
 
 import java.util.Collection;
@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 public class ResponseManager {
 
-    public static boolean isMatch(@NonNull String userResponse,@NonNull GameResponseModel gameResponse){
+    public static boolean isMatch(@NonNull String userResponse,@NonNull GameResponse gameResponse){
         if(gameResponse.isExactMatch())
             return userResponse.trim().equalsIgnoreCase(gameResponse.getResponse().trim());
         return Stream.of(gameResponse.getAcceptedMatch().stream().map(Match::getName).collect(Collectors.toSet())

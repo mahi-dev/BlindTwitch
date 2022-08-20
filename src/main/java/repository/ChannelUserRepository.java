@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ChannelUserRepository extends JpaRepository<ChannelUser, Long> {
-    List<String> findByUserId(String userId);
+    List<ChannelUser> findByUserId(String userId);
+    List<ChannelUser> findByAdminRoleTrue();
 }
 

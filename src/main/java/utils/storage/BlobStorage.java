@@ -1,6 +1,6 @@
 package utils.storage;
 
-import configuration.ApplicationContext;
+import context.ApplicationContext;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import repository.ChannelUserRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class ChannelUserService implements ServiceClient.UserService {
@@ -16,7 +17,6 @@ public class ChannelUserService implements ServiceClient.UserService {
 
     private final ChannelUserRepository repository;
 
-
     @Override
     public boolean isUnknowUser(@NonNull String userId){
         return repository.findByUserId(userId).isEmpty();
@@ -24,7 +24,12 @@ public class ChannelUserService implements ServiceClient.UserService {
 
     @Override
     @Transactional
-    public void createUser(@NonNull String userId,@NonNull String username){
-        repository.saveAndFlush(new ChannelUser(userId, username));
+    public void createUser(@NonNull String userId,@NonNull String username, boolean hasAdminRole){
+        repository.saveAndFlush(new ChannelUser(userId, username, hasAdminRole));
+    }
+
+    @Override
+    public List<ChannelUser> getAdministratorUsers() {
+        return repository.findByAdminRoleTrue();
     }
 }

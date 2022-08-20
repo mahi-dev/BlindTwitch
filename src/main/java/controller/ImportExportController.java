@@ -2,7 +2,7 @@ package controller;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import model.GameModel;
+import model.Game;
 import org.springframework.stereotype.Controller;
 import service.ServiceClient;
 
@@ -23,7 +23,7 @@ public class ImportExportController {
         service.serveGameResponse(id, filePath);
     }
 
-    void serveGameResponse(@NonNull GameModel game, @NonNull URL filePath) throws ServiceClient.Exception, IOException{
+    void serveGameResponse(@NonNull Game game, @NonNull URL filePath) throws ServiceClient.Exception, IOException{
         service.serveGameResponse(game, filePath);
     }
 

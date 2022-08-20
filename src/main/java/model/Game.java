@@ -2,19 +2,19 @@ package model;
 
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.context.annotation.Lazy;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.util.Set;
 
-
 @Entity
 @Data
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
 @DynamicUpdate
-public class GameResponseModel implements Model<Long> {
+public class Game implements Model<Long> {
 
     @Serial
     private static final long serialVersionUID = -2268893432970108975L;
@@ -23,17 +23,11 @@ public class GameResponseModel implements Model<Long> {
     @GeneratedValue
     @EqualsAndHashCode.Include
     private Long uid;
-    private final int position;
-    @OneToOne(fetch = FetchType.LAZY)
-    @NonNull
-    private final Guessable proposition;
     @NonNull
     @NotBlank
-    private final String response;
+    private String name;
     @NonNull
+    @Lazy
     @OneToMany(fetch = FetchType.LAZY)
-    private final Set<Match> acceptedMatch;
-    private final boolean exactMatch;
-    private final boolean active;
-
+    private Set<GameResponse> responses;
 }

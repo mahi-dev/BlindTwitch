@@ -37,12 +37,12 @@ public class ImportExportService implements ServiceClient.ImportExportService {
     @Transactional
     public void storeGameResponse(@NonNull String name, @NonNull URL filePath) throws ServiceClient.Exception {
         try {
-            gameService.storeGame(new GameModel(name,
+            gameService.storeGame(new Game(name,
                     new CsvReader(new FileReader(filePath.toString()))
                             .rows()
                             .filter(Objects::nonNull)
                             .filter(row -> row.size() >= 7)
-                            .map(row -> new GameResponseModel(
+                            .map(row -> new GameResponse(
                                             Integer.parseInt(row.get(1)),
                                             createGuessable(name, row.get(2)),
                                             row.get(3),
@@ -64,7 +64,7 @@ public class ImportExportService implements ServiceClient.ImportExportService {
     }
 
     @Override
-    public void serveGameResponse(@NonNull GameModel game, @NonNull URL filePath) throws ServiceClient.Exception, IOException {
+    public void serveGameResponse(@NonNull Game game, @NonNull URL filePath) throws ServiceClient.Exception, IOException {
         try {
             var exportableResponse = game.getResponses().stream()
                     .map(r-> List.of(

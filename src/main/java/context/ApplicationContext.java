@@ -1,4 +1,4 @@
-package configuration;
+package context;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

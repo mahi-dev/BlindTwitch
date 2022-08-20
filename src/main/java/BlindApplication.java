@@ -24,6 +24,7 @@ import org.springframework.boot.devtools.autoconfigure.LocalDevToolsAutoConfigur
 import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import repository.ChannelUserRepository;
 import repository.GameRepository;
 import repository.GameResponseRepository;
 import service.*;
@@ -49,7 +50,7 @@ import java.nio.file.Path;
 @EnableJpaRepositories({"repository"})
 @EnableTransactionManagement
 @ConfigurationPropertiesScan({"configuration"})
-@ComponentScan({"controller"})
+@ComponentScan({"controller","context"})
 @EntityScan({"model"})
 public class BlindApplication {
 
@@ -68,6 +69,13 @@ public class BlindApplication {
     public FileSystemStorage fileSystemStorage() throws IOException {
         return new FileSystemStorage(this.fileSystemStorageBasePath);
     }
+
+    @Lazy
+    @Bean
+    public ServiceClient.UserService userService(ChannelUserRepository repository) throws IOException {
+        return new ChannelUserService(repository);
+    }
+
 
     @Lazy
     @Bean
@@ -105,8 +113,9 @@ public class BlindApplication {
     @Lazy
     public ServiceClient.TwitchService authenticateTwitchClient(BlindConfiguration config,
                                                                 TwitchIdentityProvider twitchIdentityProvider,
-                                                                TwitchClientBuilder clientBuilder){
-        return new AuthenticateTwitchClient(config, twitchIdentityProvider, clientBuilder);
+                                                                TwitchClientBuilder clientBuilder,
+                                                                ServiceClient.UserService userService){
+        return new AuthenticateTwitchClient(config, twitchIdentityProvider, clientBuilder, userService);
     }
 
     @Lazy
