@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -30,6 +31,7 @@ public class ImportExportService implements ServiceClient.ImportExportService {
     private static final String EMPTY_PATH = "empty/path";
     private static final String DELIMITER = "|";
     private final ServiceClient.GameService gameService;
+    private final ServiceClient.SettingsService settingsService;
     private final FileSystemStorage fileSystemStorage;
 
     @SneakyThrows
@@ -50,7 +52,8 @@ public class ImportExportService implements ServiceClient.ImportExportService {
                                             Boolean.parseBoolean(row.get(5)),
                                             Boolean.parseBoolean(row.get(6))
                                     )
-                            ).collect(Collectors.toSet())
+                            ).collect(Collectors.toSet()),
+                    Set.of(new DefaultSetting())
             ));
         }catch (Exception e){
             LOG.error("Error during Csv storage {0}",e);

@@ -2,11 +2,14 @@ package service;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import model.DefaultSetting;
 import model.Game;
+import model.Setting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import repository.GameRepository;
 
+import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,10 +33,18 @@ public class GameService implements ServiceClient.GameService {
     }
 
     @Override
-    public void storeGame(@NonNull Game response) throws ServiceClient.Exception {
-        repository.saveAndFlush(response);
+    public Setting getActiveSetting(@NonNull String id) throws ServiceClient.Exception {
+        return getGame(id).get(0).getSettings().stream().filter(s -> Setting.TRI_TRUE.equals(s.getExactMatch()))
+                .findFirst().orElse(new DefaultSetting());
     }
 
+    @Transactional
+    @Override
+    public void storeGame(@NonNull Game game) throws ServiceClient.Exception {
+        repository.saveAndFlush(game);
+    }
+
+    @Transactional
     @Override
     public void deleteGame(@NonNull String id) throws ServiceClient.Exception {
         repository.deleteById(Long.parseLong(id));

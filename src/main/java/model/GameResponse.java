@@ -17,7 +17,7 @@ import java.util.Set;
 public class GameResponse implements Model<Long> {
 
     @Serial
-    private static final long serialVersionUID = -2268893432970108975L;
+    private static final long serialVersionUID = -2268893432978536669L;
 
     @Id
     @GeneratedValue

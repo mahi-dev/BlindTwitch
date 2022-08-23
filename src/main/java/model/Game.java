@@ -30,4 +30,7 @@ public class Game implements Model<Long> {
     @Lazy
     @OneToMany(fetch = FetchType.LAZY)
     private Set<GameResponse> responses;
+    @OneToMany
+    @NonNull
+    private Set<Setting> settings;
 }

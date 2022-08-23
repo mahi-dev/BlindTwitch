@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 @Data
@@ -25,4 +26,7 @@ public class ChannelUser implements Model<Long> {
     @NonNull
     private final String userName;
     private final boolean adminRole;
+    @NonNull
+    @OneToOne
+    private final Score score;
 }

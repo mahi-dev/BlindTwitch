@@ -1,6 +1,6 @@
 package model;
 
-import identity.UniquelyIdentifiable;
+import model.identity.UniquelyIdentifiable;
 
 import java.io.Serializable;
 

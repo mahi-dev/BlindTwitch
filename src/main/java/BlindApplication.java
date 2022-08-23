@@ -24,9 +24,7 @@ import org.springframework.boot.devtools.autoconfigure.LocalDevToolsAutoConfigur
 import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import repository.ChannelUserRepository;
-import repository.GameRepository;
-import repository.GameResponseRepository;
+import repository.*;
 import service.*;
 import utils.storage.FileSystemStorage;
 
@@ -85,10 +83,23 @@ public class BlindApplication {
 
     @Lazy
     @Bean
+    public ServiceClient.SettingsService settingsService(SettingRepository repository) {
+        return new SettingService(repository);
+    }
+
+    @Lazy
+    @Bean
+    public ServiceClient.ScoreService scoreService(ServiceClient.UserService userService) {
+        return new ScoreManager( userService);
+    }
+
+    @Lazy
+    @Bean
     public ServiceClient.ImportExportService importExportService(ServiceClient.GameService gameService,
+                                                                 ServiceClient.SettingsService settingsService,
                                                                  FileSystemStorage fileSystemStorage)
             throws IOException {
-        return new ImportExportService(gameService,fileSystemStorage);
+        return new ImportExportService(gameService, settingsService, fileSystemStorage);
     }
 
     @Lazy
@@ -120,7 +131,7 @@ public class BlindApplication {
 
     @Lazy
     @Bean
-    public MessageManager messageManager(ServiceClient.GameService gameService,
+    public ServiceClient.MessageService messageManager(ServiceClient.GameService gameService,
                                          ServiceClient.ResponseService responseService,
                                          ServiceClient.UserService userService) {
         return new MessageManager(gameService, responseService, userService);

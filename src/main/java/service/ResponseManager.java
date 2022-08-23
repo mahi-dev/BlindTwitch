@@ -1,4 +1,4 @@
-package message;
+package service;
 
 import lombok.NonNull;
 import model.GameResponse;

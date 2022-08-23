@@ -16,17 +16,23 @@ public class BlindController  implements EventListener {
 
     public final AuthenticateTwitchClient client;
     public final MessageManager messageManager;
+    public final ServiceClient.ScoreService scoreManager;
+    public final ServiceClient.GameService gameService;
 
     private boolean isGameStarted = false;
     private String currentGameId = "0";
-    private int currentResponseOrder = 0;
+    private int currentResponseSerie = 0;
 
     @Autowired
-    public BlindController(AuthenticateTwitchClient client, MessageManager messageManager) {
+    public BlindController(AuthenticateTwitchClient client, MessageManager messageManager,
+                           ServiceClient.ScoreService scoreManager, ServiceClient.GameService gameService) {
         this.client = client;
         this.messageManager = messageManager;
+        this.scoreManager = scoreManager;
+        this.gameService = gameService;
         EventManager.getInstance().addEventListener(ApplicationEvents.MESSAGE_RECEIVE, this);
         EventManager.getInstance().addEventListener(ApplicationEvents.START_GAME, this);
+        EventManager.getInstance().addEventListener(ApplicationEvents.STOP_GAME, this);
     }
 
     @SneakyThrows
@@ -34,32 +40,41 @@ public class BlindController  implements EventListener {
     public void onNotify(String eventType, Object[] args) {
         var event = (ChannelMessageEvent) args[0];
         var gameId= (String) args[1];
-        var responseOrder= (int) args[2];
+        var responseSerie= (int) args[2];
         switch (eventType){
             case ApplicationEvents.START_GAME:
-                startGame(gameId, responseOrder);
+                startGame(gameId, responseSerie);
                 break;
             case ApplicationEvents.STOP_GAME:
                 stopGame();
                 break;
+            case ApplicationEvents.MESSAGE_RECEIVE:
             default:
-                var isUserGuess = isUserGuess(event);
+                play(event);
+                break;
         }
     }
 
-    private boolean isUserGuess(ChannelMessageEvent arg) throws ServiceClient.Exception {
+    private boolean isUserGuess(ChannelMessageEvent event) throws ServiceClient.Exception {
         return isGameStarted &&
-                messageManager.isUserGuess(currentGameId, currentResponseOrder,arg);
+                messageManager.isUserGuess(currentGameId, currentResponseSerie, event);
     }
 
-    public void startGame(String gameId, int responseOrder){
+    public void startGame(String gameId, int responseSerie){
         isGameStarted = true;
         currentGameId = gameId;
-        currentResponseOrder = responseOrder;
+        currentResponseSerie = responseSerie;
     }
 
     public void stopGame(){
         isGameStarted = false;
+    }
 
+    public void play(ChannelMessageEvent event) throws ServiceClient.Exception {
+        if(isUserGuess(event) && isGameStarted) {
+            scoreManager.addToScore(event.getUser().getId(),
+                    gameService.getActiveSetting(currentGameId).getWinningPoint());
+            stopGame();
+        }
     }
 }

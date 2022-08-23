@@ -5,13 +5,14 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import model.Game;
 import model.GameResponse;
+import service.ResponseManager;
 import service.ServiceClient;
 
 import java.util.Collections;
 import java.util.Set;
 
 @RequiredArgsConstructor
-public class MessageManager {
+public class MessageManager implements ServiceClient.MessageService{
 
     @NonNull
     private final ServiceClient.GameService gameService;
@@ -22,17 +23,19 @@ public class MessageManager {
     @NonNull
     private final ServiceClient.UserService userService;
 
-    public boolean isUserGuess(@NonNull String gameId, int responseOrder, @NonNull ChannelMessageEvent event)
+    @Override
+    public boolean isUserGuess(@NonNull String gameId, int responseSerie, @NonNull ChannelMessageEvent event)
             throws ServiceClient.Exception {
-       return isUserGuess(gameId, responseOrder, event.getUser().getId(), event.getUser().getName(),event.getMessage());
+       return isUserGuess(gameId, responseSerie, event.getUser().getId(), event.getUser().getName(),event.getMessage());
     }
 
-    public boolean isUserGuess(@NonNull String gameId, int responseOrder, @NonNull String userId,
+    @Override
+    public boolean isUserGuess(@NonNull String gameId, int responseSerie, @NonNull String userId,
                                @NonNull String userName, @NonNull String response) throws ServiceClient.Exception {
         if(userService.isUnknowUser(userId)){
             userService.createUser(userId, userName, false);
         }
-        return ResponseManager.isMatch(response, getGameResponse(gameId, responseOrder));
+        return ResponseManager.isMatch(response, getGameResponse(gameId, responseSerie));
     }
 
     private GameResponse getGameResponse(String gameId, int responseOrder) throws ServiceClient.Exception {
