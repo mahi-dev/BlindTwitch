@@ -29,4 +29,5 @@ public class ChannelUser implements Model<Long> {
     @NonNull
     @OneToOne
     private final Score score;
+    private byte[] avatar;
 }

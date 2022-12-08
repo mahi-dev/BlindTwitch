@@ -8,7 +8,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Login {
  @NonNull
- private String username;
+ private String provider;
  @NonNull
- private String password;
+ private String clientId;
+ @NonNull
+ private String clientSecret;
+ @NonNull
+ private String clientToken;
+ @NonNull
+ private String channel;
 }

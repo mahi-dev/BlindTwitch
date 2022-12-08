@@ -25,21 +25,10 @@ public class LoginController {
      @PostMapping("/login")
      public String login(@ModelAttribute(name="loginForm") Login login, Model m) {
 
-       var uname = login.getUsername();
-       var pass = login.getPassword();
-
-         var provider = blindConfiguration.provider();
-         var clientId = blindConfiguration.clientId();
-         var clientSecret = blindConfiguration.clientSecret();
-         var clientToken = blindConfiguration.clientToken();
-         var channel = blindConfiguration.channel();
-         var valid = twitchService.isCredentialValid(blindConfiguration);
-       if(uname.equals("Admin") && pass.equals("Admin@123")) {
-         m.addAttribute("uname", uname);
-         m.addAttribute("pass", pass);
-         return "welcome";
+       if(twitchService.isCredentialValid(login.getProvider(), login.getClientToken())) {
+         return "game";
        }
-       m.addAttribute("error", "Incorrect Username & Password");
+       m.addAttribute("error", "Incorrect Provider and Client Token");
        return "login";
 
     }

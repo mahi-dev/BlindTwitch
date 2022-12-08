@@ -38,8 +38,8 @@ public class MessageManager implements ServiceClient.MessageService{
         return ResponseManager.isMatch(response, getGameResponse(gameId, responseSerie));
     }
 
-    private GameResponse getGameResponse(String gameId, int responseOrder) throws ServiceClient.Exception {
-        return getGameResponses(gameId).stream().filter(r->responseOrder == r.getPosition()).findAny()
+    private GameResponse getGameResponse(String gameId, int responseSerie) throws ServiceClient.Exception {
+        return getGameResponses(gameId).stream().filter(r->responseSerie == r.getPosition()).findAny()
                 .orElseThrow(()-> new ServiceClient.Exception("Response Not Found"));
     }
 

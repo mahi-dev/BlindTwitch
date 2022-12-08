@@ -28,9 +28,9 @@ public class Game implements Model<Long> {
     private String name;
     @NonNull
     @Lazy
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     private Set<GameResponse> responses;
-    @OneToMany
+    @OneToMany(cascade=CascadeType.ALL)
     @NonNull
     private Set<Setting> settings;
 }

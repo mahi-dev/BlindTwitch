@@ -12,13 +12,10 @@ import java.util.stream.Stream;
 public class ResponseManager {
 
     public static boolean isMatch(@NonNull String userResponse,@NonNull GameResponse gameResponse){
-        if(gameResponse.isExactMatch())
-            return userResponse.trim().equalsIgnoreCase(gameResponse.getResponse().trim());
-        return Stream.of(gameResponse.getAcceptedMatch().stream().map(Match::getName).collect(Collectors.toSet())
+        return (gameResponse.isExactMatch()) ?
+             userResponse.trim().equalsIgnoreCase(gameResponse.getResponse().trim()) :
+             Stream.of(gameResponse.getAcceptedMatch().stream().map(Match::getName).collect(Collectors.toSet())
                         , Set.of(gameResponse.getResponse()))
-                .flatMap(Collection::stream)
-                .filter(m-> userResponse.trim().equalsIgnoreCase(m.trim()))
-                .count() > 0;
-
+                .flatMap(Collection::stream).anyMatch(m -> userResponse.trim().equalsIgnoreCase(m.trim()));
     }
 }

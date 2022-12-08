@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import java.sql.Blob;
 
 @Entity
 @Data
@@ -25,6 +24,6 @@ public class Guessable implements Model<Long> {
     private final String name;
     @Lob
     @NonNull
-    private final Blob guess;
+    private final byte[] guess;
 
 }

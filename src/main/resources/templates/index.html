@@ -12,10 +12,19 @@
         <form th:action="@{/login}" th:object="${loginForm}" method="post">
             <p th:if="${error}" class="error">UserName & Password Incorrect</p>
             <div class="row">
-                <input type="text" name="username">
+                <input type="text" name="provider" placeholder="twitch">
             </div>
             <div class="row">
-                <input type="password" name="password">
+                <input type="password" name="clientId">
+            </div>
+            <div class="row">
+                <input type="password" name="clientSecret">
+            </div>
+            <div class="row">
+                <input type="password" name="clientToken">
+            </div>
+            <div class="row">
+                <input type="text" name="channel">
             </div>
             <div class="row button">
                 <input type="submit" value="Login">

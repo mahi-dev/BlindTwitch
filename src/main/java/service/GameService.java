@@ -34,7 +34,7 @@ public class GameService implements ServiceClient.GameService {
 
     @Override
     public Setting getActiveSetting(@NonNull String id) throws ServiceClient.Exception {
-        return getGame(id).get(0).getSettings().stream().filter(s -> Setting.TRI_TRUE.equals(s.getExactMatch()))
+        return getGame(id).get(0).getSettings().stream().filter(s -> Setting.Match.TRUE.equals(s.getExactMatch()))
                 .findFirst().orElse(new DefaultSetting());
     }
 

@@ -24,14 +24,14 @@ public class GameResponse implements Model<Long> {
     @EqualsAndHashCode.Include
     private Long uid;
     private final int position;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @NonNull
     private final Guessable proposition;
     @NonNull
     @NotBlank
     private final String response;
     @NonNull
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     private final Set<Match> acceptedMatch;
     private final boolean exactMatch;
     private final boolean active;

@@ -2,6 +2,7 @@ import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
 import configuration.BlindConfiguration;
 import lombok.Getter;
+import lombok.NonNull;
 import message.MessageManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -24,7 +25,11 @@ import org.springframework.boot.devtools.autoconfigure.LocalDevToolsAutoConfigur
 import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import repository.*;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import repository.ChannelUserRepository;
+import repository.GameRepository;
+import repository.GameResponseRepository;
+import repository.SettingRepository;
 import service.*;
 import utils.storage.FileSystemStorage;
 
@@ -64,53 +69,59 @@ public class BlindApplication {
 
     @Lazy
     @Bean
+    public CommonsMultipartResolver filterMultipartResolver(){
+        return new  CommonsMultipartResolver();
+    }
+
+    @Lazy
+    @Bean
     public FileSystemStorage fileSystemStorage() throws IOException {
         return new FileSystemStorage(this.fileSystemStorageBasePath);
     }
 
     @Lazy
     @Bean
-    public ServiceClient.UserService userService(ChannelUserRepository repository) throws IOException {
+    public ServiceClient.UserService userService(@NonNull ChannelUserRepository repository) throws IOException {
         return new ChannelUserService(repository);
     }
 
 
     @Lazy
     @Bean
-    public ServiceClient.GameService gameService(GameRepository repository) throws IOException {
+    public ServiceClient.GameService gameService(@NonNull GameRepository repository) throws IOException {
         return new GameService(repository);
     }
 
     @Lazy
     @Bean
-    public ServiceClient.SettingsService settingsService(SettingRepository repository) {
+    public ServiceClient.SettingsService settingsService(@NonNull SettingRepository repository) {
         return new SettingService(repository);
     }
 
     @Lazy
     @Bean
-    public ServiceClient.ScoreService scoreService(ServiceClient.UserService userService) {
+    public ServiceClient.ScoreService scoreService(@NonNull ServiceClient.UserService userService) {
         return new ScoreManager( userService);
     }
 
     @Lazy
     @Bean
-    public ServiceClient.ImportExportService importExportService(ServiceClient.GameService gameService,
-                                                                 ServiceClient.SettingsService settingsService,
-                                                                 FileSystemStorage fileSystemStorage)
+    public ServiceClient.ImportExportService importExportService(@NonNull ServiceClient.GameService gameService,
+                                                                 @NonNull ServiceClient.SettingsService settingsService,
+                                                                 @NonNull FileSystemStorage fileSystemStorage)
             throws IOException {
         return new ImportExportService(gameService, settingsService, fileSystemStorage);
     }
 
     @Lazy
     @Bean
-    public ServiceClient.ResponseService responseService(GameResponseRepository repository) throws IOException {
+    public ServiceClient.ResponseService responseService(@NonNull GameResponseRepository repository) throws IOException {
         return new ResponseService(repository);
     }
 
     @Lazy
     @Bean
-    public TwitchIdentityProvider twitchIdentityProvider(BlindConfiguration config){
+    public TwitchIdentityProvider twitchIdentityProvider(@NonNull BlindConfiguration config){
         return new TwitchIdentityProvider(config.clientId(), config.clientSecret(), config.redirectUrl());
     }
 
@@ -122,21 +133,26 @@ public class BlindApplication {
 
     @Bean
     @Lazy
-    public ServiceClient.TwitchService authenticateTwitchClient(BlindConfiguration config,
-                                                                TwitchIdentityProvider twitchIdentityProvider,
-                                                                TwitchClientBuilder clientBuilder,
-                                                                ServiceClient.UserService userService){
+    public ServiceClient.TwitchService authenticateTwitchClient(@NonNull BlindConfiguration config,
+                                                                @NonNull TwitchIdentityProvider twitchIdentityProvider,
+                                                                @NonNull TwitchClientBuilder clientBuilder,
+                                                                @NonNull ServiceClient.UserService userService){
         return new AuthenticateTwitchClient(config, twitchIdentityProvider, clientBuilder, userService);
     }
 
     @Lazy
     @Bean
-    public ServiceClient.MessageService messageManager(ServiceClient.GameService gameService,
-                                         ServiceClient.ResponseService responseService,
-                                         ServiceClient.UserService userService) {
+    public ServiceClient.MessageService messageManager(@NonNull ServiceClient.GameService gameService,
+                                                       @NonNull ServiceClient.ResponseService responseService,
+                                                       @NonNull ServiceClient.UserService userService) {
         return new MessageManager(gameService, responseService, userService);
     }
 
+    @Lazy
+    @Bean
+    public ServiceClient.AvatarService avatarService(@NonNull ServiceClient.UserService userService) {
+        return new UserAvatarService(userService);
+    }
 
     public static void main(final String[] args) {
         SpringApplication.run(BlindApplication.class, args);

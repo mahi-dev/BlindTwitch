@@ -3,7 +3,12 @@ package controller;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import model.Game;
+import model.GameResponse;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import service.ServiceClient;
 
 import java.util.List;
@@ -13,6 +18,17 @@ import java.util.List;
 public class GameController {
 
     public final ServiceClient.GameService service;
+
+    @ModelAttribute
+    GameResponse setupForm () {
+        return new GameResponse();
+    }
+
+    @GetMapping("/game/{id}")
+    public String showGames(@PathVariable("id") String id, Model model) throws ServiceClient.Exception {
+        model.addAttribute("game", service.getGame(id).get(0));
+        return "game";
+    }
 
     List<Game> getAllGames() throws ServiceClient.Exception{
         return service.getAllGames();

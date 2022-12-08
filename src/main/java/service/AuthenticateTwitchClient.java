@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class AuthenticateTwitchClient implements ServiceClient.TwitchService{
 
+    @Getter
     private final BlindConfiguration blindConfiguration;
     private final TwitchIdentityProvider twitchIdentityProvider;
     private final TwitchClientBuilder clientBuilder;
@@ -34,7 +35,7 @@ public class AuthenticateTwitchClient implements ServiceClient.TwitchService{
         this.twitchClient = createTtwitchClient(blindConfiguration);
         this.userService = userService;
         this.registerEvents();
-        this.joinChannels();
+        this.joinChannel(blindConfiguration.channel());
     }
 
     @Override
@@ -86,7 +87,7 @@ public class AuthenticateTwitchClient implements ServiceClient.TwitchService{
         new MessageEvent(twitchClient.getEventManager().getEventHandler(SimpleEventHandler.class), userService);
     }
 
-    private void joinChannels() {
-        twitchClient.getChat().joinChannel(blindConfiguration.channel());
+    private void joinChannel(String channel) {
+        twitchClient.getChat().joinChannel(channel);
     }
 }

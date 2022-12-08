@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>GameSerie</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div>
+    <th:block th:utext="${game.uid}"/>
+    <th:block th:utext="${game.name}"/>
+    <form action="#" th:action="@{/games/action}" th:object="${form}"
+          method="post">
+        <fieldset>
+            <table>
+                <thead>
+                <tr>
+                    <th> Id</th>
+                    <th> response</th>
+                    <th> </th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr th:each="response : ${game.responses}">
+                    <td th:text="${response.uid}" />
+                    <td th:text="${response.response}" />
+                    <td>
+                        <input type="submit" name="action" id="playButton" th:value="Play">
+                        <input type="submit" name="action" id="editButton" th:value="Edit"/>
+                        <input type="submit" name="action" id="stopButton" th:value="Stop">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </fieldset>
+    </form>
+</div>
+
+</body>
+</html>

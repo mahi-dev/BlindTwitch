@@ -1,7 +1,6 @@
 package model;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 public class DefaultSetting extends Setting{
 
@@ -11,8 +10,8 @@ public class DefaultSetting extends Setting{
     }
 
     @Override
-    public Optional<Boolean> getExactMatch(){
-        return TRI_UNKNOWN;
+    public Match getExactMatch(){
+        return Match.UNKNOWN;
     }
 
     @Override

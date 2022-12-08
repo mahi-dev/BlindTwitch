@@ -58,4 +58,9 @@ public class ChannelUserService implements ServiceClient.UserService {
     public Score getScore(@NonNull String userId) throws ServiceClient.Exception {
         return getUser(userId).getScore();
     }
+
+    @Override
+    public void update(@NonNull ChannelUser user) {
+        repository.saveAndFlush(user);
+    }
 }
