@@ -18,14 +18,17 @@
         <lombok.version>1.18.24</lombok.version>
         <maven.compiler.source>18</maven.compiler.source>
         <maven.compiler.target>18</maven.compiler.target>
-        <twitch4j.version>1.11.0</twitch4j.version>
-        <springboot.version>2.7.3</springboot.version>
-        <hsql.version>2.5.2</hsql.version>
+        <twitch4j.version>1.12.0</twitch4j.version>
+        <springboot.version>3.0.0</springboot.version>
+        <hsql.version>2.7.1</hsql.version>
         <apache-commons.version>1.4</apache-commons.version>
         <jakarta-annotation.version>2.1.0</jakarta-annotation.version>
         <jakarta-persistence.version>3.1.0</jakarta-persistence.version>
         <jakarta-validation.version>3.0.2</jakarta-validation.version>
         <msql-connector.version>8.0.30</msql-connector.version>
+        <jakarta.old.version>2.3.2</jakarta.old.version>
+        <jasypt.version>1.9.3</jasypt.version>
+        <slf4j.version>2.0.5</slf4j.version>
     </properties>
 
     <dependencies>
@@ -94,17 +97,17 @@
             <version>${springboot.version}</version>
         </dependency>
         <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>2.3.2</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jasypt</groupId>
+            <artifactId>jasypt</artifactId>
+            <version>${jasypt.version}</version>
         </dependency>
 
-        <!-- Runtime, com.sun.xml.bind module -->
-        <dependency>
-            <groupId>org.glassfish.jaxb</groupId>
-            <artifactId>jaxb-runtime</artifactId>
-            <version>2.3.2</version>
-        </dependency>
+
     </dependencies>
 
     <build>

@@ -4,11 +4,11 @@ import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import configuration.BlindConfiguration;
+import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import model.*;
 
-import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

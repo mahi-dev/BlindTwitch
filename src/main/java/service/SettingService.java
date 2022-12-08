@@ -1,5 +1,6 @@
 package service;
 
+import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import model.Game;
@@ -8,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import repository.SettingRepository;
 
-import javax.transaction.Transactional;
 import java.util.Set;
 import java.util.stream.Collectors;
 

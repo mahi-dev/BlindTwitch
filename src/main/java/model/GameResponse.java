@@ -1,10 +1,10 @@
 package model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.util.Set;
 

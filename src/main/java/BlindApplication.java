@@ -25,7 +25,7 @@ import org.springframework.boot.devtools.autoconfigure.LocalDevToolsAutoConfigur
 import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import repository.ChannelUserRepository;
 import repository.GameRepository;
 import repository.GameResponseRepository;
@@ -69,8 +69,8 @@ public class BlindApplication {
 
     @Lazy
     @Bean
-    public CommonsMultipartResolver filterMultipartResolver(){
-        return new  CommonsMultipartResolver();
+    public StandardServletMultipartResolver filterMultipartResolver(){
+        return new  StandardServletMultipartResolver();
     }
 
     @Lazy

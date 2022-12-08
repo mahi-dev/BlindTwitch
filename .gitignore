@@ -1,3 +1,7 @@
 *.properties
 *.db.*
-target/*
+*.class
+.jpb/*
+.idea/*
+*target*
+.idea/misc.xml

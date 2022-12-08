@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.view.RedirectView;
 import service.ServiceClient;
 
 @Controller
@@ -23,13 +24,13 @@ public class LoginController {
      }
 
      @PostMapping("/login")
-     public String login(@ModelAttribute(name="loginForm") Login login, Model m) {
+     public RedirectView login(@ModelAttribute(name="loginForm") Login login, Model m) {
 
        if(twitchService.isCredentialValid(login.getProvider(), login.getClientToken())) {
-         return "game";
+         return new RedirectView("/games");
        }
        m.addAttribute("error", "Incorrect Provider and Client Token");
-       return "login";
+       return new RedirectView("/");
 
     }
 }

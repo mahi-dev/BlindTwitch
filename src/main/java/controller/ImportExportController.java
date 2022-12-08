@@ -1,5 +1,6 @@
 package controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import model.Game;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.view.RedirectView;
 import service.ServiceClient;
 
 import java.io.File;
@@ -26,14 +28,15 @@ public class ImportExportController {
     private final ServiceClient.ImportExportService service;
 
     @PostMapping("/games/import")
-    public String importGame(@RequestParam("file") @NonNull MultipartFile multipartFile, Model model) {
+    public RedirectView importGame(HttpServletRequest request, @RequestParam("file") @NonNull MultipartFile multipartFile, Model model) {
 
         if (multipartFile.isEmpty()) {
             model.addAttribute("message", "Please select a CSV file to upload.");
             model.addAttribute("status", false);
         } else {
             try {
-                File file = new File(fileSystemStorageBasePath + "/targetFile.tmp");
+                var dir =  request.getServletContext().getRealPath("/targetFile.tmp");
+                var file = new File(dir);
                 multipartFile.transferTo(file);
                 storeGameResponse("test", file);
             } catch (Exception ex) {
@@ -41,7 +44,7 @@ public class ImportExportController {
                 model.addAttribute("status", false);
             }
         }
-        return "/games";
+        return new RedirectView("/games");
     }
 
     void storeGameResponse(@NonNull String name, @NonNull File file) throws ServiceClient.Exception{
